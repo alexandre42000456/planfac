@@ -1,56 +1,111 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>Plan de la Faculté</title>
   <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
   <style>
-    body {
+    /* Base + box sizing cohérent */
+    *, *::before, *::after { box-sizing: border-box; }
+
+    html, body {
+      height: 100%;
       margin: 0;
+    }
+
+    /* Le corps occupe exactement la hauteur de l'écran et ne dépasse jamais */
+    body {
       font-family: sans-serif;
       background: #f9f9f9;
+      color: #111;
       text-align: center;
+
+      /* Hauteur verrouillée à la viewport (compat mobile) */
+      min-height: 100svh;
+      max-height: 100svh; /* ne dépasse jamais */
+      overflow: hidden;   /* empêche le scroll de page */
+
+      display: flex;
     }
-    #building-model {
+
+    /* Conteneur principal en colonne qui remplit tout l'écran */
+    .page {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;                 /* espace vertical entre éléments */
+      padding: 16px;
       width: 100%;
-      height: 85vh;
+      height: 100%;              /* occupe toute la hauteur du body */
+    }
+
+    h1 {
+      margin: 0;                 /* évite les décalages inattendus */
+      color: #ac3741;
+      font-size: clamp(12px, 2vw, 24px);
+      line-height: 1.2;
+    }
+
+    /* Le viewer prend tout l'espace restant entre le h1 et le bouton */
+    #building-model {
+      flex: 1 1 auto;            /* occupe le reste de l'écran */
+      min-height: 0;             /* crucial pour que flex puisse rétrécir sans overflow */
+      width: 100%;
       border: 1px solid #ddd;
       border-radius: 8px;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      background: #fff;
     }
+
     .control-button {
-      margin: 20px;
-      padding: 10px 20px;
-      font-size: 16px;
+      align-self: center;        /* centre le bouton dans l'axe horizontal */
+      padding: clamp(8px, 2vw, 20px) clamp(12px, 3vw, 40px);
+      font-size: clamp(12px, 2vw, 24px);
       color: #fff;
       background-color: #ff8080;
       border: none;
-      border-radius: 4px;
+      border-radius: 8px;
       cursor: pointer;
+      transition: transform .05s ease, background-color .2s ease;
     }
     .control-button:hover { background-color: #ff0000; }
+    .control-button:active { transform: scale(0.98); }
+    .control-button:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+    .control-button:focus-visible {
+      outline: 3px solid #ac3741;
+      outline-offset: 3px;
+    }
   </style>
 </head>
 <body>
 
-  <!-- Modèle par défaut (bâtiments) -->
-  <model-viewer
-    id="building-model"
-    src="https://alexandre42000456.github.io/testEDEN/bat2.glb"
-    alt="Modèle 3D interactif"
-    camera-controls
-    exposure="1"
-    style="margin-bottom: 20px;">
-  </model-viewer>
+  <div class="page">
+    <h1>Plan de la Faculté</h1>
 
-  <button id="toggle-model-button" class="control-button">Afficher les amphithéâtres</button>
+    <!-- Le modèle remplit l'espace disponible entre le titre et le bouton -->
+    <model-viewer
+      id="building-model"
+      src="https://alexandre42000456.github.io/testEDEN/bat4.glb"
+      alt="Plan 3D de la Faculté"
+      camera-controls
+      exposure="1"
+      min-camera-orbit="auto 0deg auto"
+      max-camera-orbit="auto 90deg auto"
+      camera-orbit="0deg 75deg 100%"
+      >
+    </model-viewer>
+
+    <button id="toggle-model-button" class="control-button">Afficher les amphithéâtres</button>
+  </div>
 
   <script>
     // 🔗 Renseigne tes deux modèles ici
     const MODELS = {
-      batiments: 'https://alexandre42000456.github.io/testEDEN/bat2.glb',
-      // Remplace l’URL ci-dessous par celle de ton modèle "amphithéâtres"
-      amphis:    'https://alexandre42000456.github.io/testEDEN/amphis2.glb'
+      batiments: 'https://alexandre42000456.github.io/testEDEN/bat4.glb',
+      amphis:    'https://alexandre42000456.github.io/testEDEN/amphis3.glb'
     };
 
     const modelViewer = document.getElementById('building-model');
@@ -72,11 +127,9 @@
       const previous = showing;
       const next = (showing === 'batiments') ? 'amphis' : 'batiments';
 
-      // Texte de chargement le temps du switch
       const oldLabel = button.textContent;
       button.textContent = 'Chargement…';
 
-      // Écouteurs one-shot pour gérer succès/erreur de chargement
       const onLoad = () => {
         modelViewer.removeEventListener('load', onLoad);
         modelViewer.removeEventListener('error', onError);
@@ -90,7 +143,6 @@
         console.error('Erreur de chargement du modèle', e);
         modelViewer.removeEventListener('load', onLoad);
         modelViewer.removeEventListener('error', onError);
-        // Restaure l’ancien modèle et l’UI
         modelViewer.src = MODELS[previous];
         busy = false;
         button.disabled = false;
@@ -101,9 +153,7 @@
       modelViewer.addEventListener('load', onLoad, { once: true });
       modelViewer.addEventListener('error', onError, { once: true });
 
-      // Remplace simplement la source
       modelViewer.src = MODELS[next];
-      // Optionnel : attendre que le viewer prenne en compte la nouvelle src
       await modelViewer.updateComplete;
     }
 
