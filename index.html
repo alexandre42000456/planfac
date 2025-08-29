@@ -15,6 +15,7 @@
 
   <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
   <style>
+    
     /* Base + box sizing cohérent */
     *, *::before, *::after { box-sizing: border-box; }
 
@@ -29,6 +30,8 @@
       background: #f9f9f9;
       color: #111;
       text-align: center;
+      background-color: #fffafa;
+
 
       /* Hauteur verrouillée à la viewport (compat mobile) */
       min-height: 100svh;
@@ -53,6 +56,7 @@
       color: #ac3741;
       font-size: 4vh;
       line-height: 1.2;
+      font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
     }
 
     /* Le viewer prend tout l'espace restant entre le h1 et le bouton */
@@ -68,8 +72,9 @@
 
     .control-button {
       align-self: center;        /* centre le bouton dans l'axe horizontal */
-      padding: clamp(8px, 2vw, 20px) clamp(12px, 3vw, 40px);
+      padding: 1vh 1vh ;
       font-size: 1.5vh;
+      font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
       color: #fff;
       background-color: #ac3741;
       border: none;
@@ -104,13 +109,33 @@
   z-index: 1000;
 }
 
+.logo2 {
+    position: absolute;    /* fixé en haut à gauche */
+    top: 10px;
+    right: 10px;
+    height: 5vh;          /* hauteur proportionnelle à l’écran */
+    width: auto;           /* garde les proportions */
+    z-index: 1000;         /* reste au-dessus du reste */
+    }
+
+    .logo-link2 {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 1000;
+}
+
   </style>
 </head>
 <body>
 
     <a href="https://associationeden.fr" target="_blank" rel="noopener noreferrer" class="logo-link">
-        <img src="https://alexandre42000456.github.io/testEDEN/logo.png" alt="Logo" class="logo">
-      </a>
+    <img src="https://alexandre42000456.github.io/testEDEN/logo.png" alt="Logo" class="logo">
+    </a>
+
+    <a href="https://associationeden.fr" target="_blank" rel="noopener noreferrer" class="logo-link2">
+    <img src="https://alexandre42000456.github.io/testEDEN/logo.png" alt="Logo" class="logo2">
+    </a>
 
   <div class="page">
     <h1>Plan de la Faculté</h1>
