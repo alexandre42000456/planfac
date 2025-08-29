@@ -6,7 +6,7 @@
   <meta name="description" content="Découvrez le plan interactif du campus, comprenant les noms des différents bâtiments et amphithéâtres">
   <meta property="og:title" content="Association Eden - Plan 3D du Campus">
 <meta property="og:description" content="Explorez le plan 3D interactif de la Faculté de Droit de Nancy">
-<meta property="og:image" content="https://plan.associationeden.fr//plan.jpg">
+<meta property="og:image" content="https://plan.associationeden.fr/plan.jpg">
 <meta property="og:url" content="https://plan.associationeden.fr">
 <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary_large_image">
@@ -51,7 +51,7 @@
     h1 {
       margin: 0;                 /* évite les décalages inattendus */
       color: #ac3741;
-      font-size: clamp(12px, 2vw, 24px);
+      font-size: 4vh;
       line-height: 1.2;
     }
 
@@ -88,9 +88,29 @@
       outline: 3px solid #ac3741;
       outline-offset: 3px;
     }
+    .logo {
+    position: absolute;    /* fixé en haut à gauche */
+    top: 10px;
+    left: 10px;
+    height: 5vh;          /* hauteur proportionnelle à l’écran */
+    width: auto;           /* garde les proportions */
+    z-index: 1000;         /* reste au-dessus du reste */
+    }
+
+    .logo-link {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  z-index: 1000;
+}
+
   </style>
 </head>
 <body>
+
+    <a href="https://associationeden.fr" target="_blank" rel="noopener noreferrer" class="logo-link">
+        <img src="https://alexandre42000456.github.io/testEDEN/logo.png" alt="Logo" class="logo">
+      </a>
 
   <div class="page">
     <h1>Plan de la Faculté</h1>
