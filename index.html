@@ -5,142 +5,85 @@
   <title>Plan interactif de la Faculté de Droit de Nancy - Association EDEN</title>
   <meta name="description" content="Découvrez le plan interactif du campus, comprenant les noms des différents bâtiments et amphithéâtres">
   <meta property="og:title" content="Association Eden - Plan 3D de la Faculté">
-<meta property="og:description" content="Explorez le plan 3D interactif de la Faculté de Droit de Nancy">
-<meta property="og:image" content="https://alexandre42000456.github.io/testEDEN/plan.jpg">
-<meta property="og:url" content="https://plan.associationeden.fr">
-<meta property="og:type" content="website">
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://plan.associationeden.fr/plan.jpg">
-
+  <meta property="og:description" content="Explorez le plan 3D interactif de la Faculté de Droit de Nancy">
+  <meta property="og:image" content="https://alexandre42000456.github.io/testEDEN/plan.jpg">
+  <meta property="og:url" content="https://plan.associationeden.fr">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://plan.associationeden.fr/plan.jpg">
 
   <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
   <style>
-    
-    /* Base + box sizing cohérent */
     *, *::before, *::after { box-sizing: border-box; }
-
-    html, body {
-      height: 100%;
-      margin: 0;
-    }
-
-    /* Le corps occupe exactement la hauteur de l'écran et ne dépasse jamais */
+    html, body { height: 100%; margin: 0; }
     body {
       font-family: sans-serif;
       background: #f9f9f9;
       color: #111;
       text-align: center;
       background-color: #ffebed;
-
-
-      /* Hauteur verrouillée à la viewport (compat mobile) */
       min-height: 100svh;
-      max-height: 100svh; /* ne dépasse jamais */
-      overflow: hidden;   /* empêche le scroll de page */
-
+      max-height: 100svh;
+      overflow: hidden;
       display: flex;
     }
-
-    /* Conteneur principal en colonne qui remplit tout l'écran */
-    .page {
-      display: flex;
-      flex-direction: column;
-      gap: 16px;                 /* espace vertical entre éléments */
-      padding: 16px;
-      width: 100%;
-      height: 100%;              /* occupe toute la hauteur du body */
-    }
-
-    h1 {
-      margin: 0;                 /* évite les décalages inattendus */
-      color: #ac3741;
-      font-size: 4vh;
-      line-height: 1.2;
-      font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
-    }
-
-    /* Le viewer prend tout l'espace restant entre le h1 et le bouton */
+    .page { display: flex; flex-direction: column; gap: 16px; padding: 16px; width: 100%; height: 100%; }
+    h1 { margin: 0; color: #ac3741; font-size: 4vh; line-height: 1.2; font-family:'Gill Sans','Gill Sans MT',Calibri,'Trebuchet MS',sans-serif; }
     #building-model {
-      flex: 1 1 auto;            /* occupe le reste de l'écran */
-      min-height: 0;             /* crucial pour que flex puisse rétrécir sans overflow */
-      width: 100%;
-      border: 1px solid #ddd;
-      border-radius: 8px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-      background: #fff;
+      flex: 1 1 auto; min-height: 0; width: 100%;
+      border: 1px solid #ddd; border-radius: 8px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1); background: #fff;
     }
 
-    .control-button {
-      align-self: center;        /* centre le bouton dans l'axe horizontal */
-      padding: 1vh 1vh ;
+    /* --- TOGGLE --- */
+    .toggle {
+      align-self: center;
+      display: inline-flex;
+      border: 1px solid #ac3741;
+      border-radius: 999px;
+      overflow: hidden;
+      background: #fff0f2;
+    }
+    .toggle-btn {
+      padding: .7em 1.1em;
       font-size: 1.5vh;
-      font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
-      color: #fff;
-      background-color: #ac3741;
-      border: none;
-      border-radius: 8px;
+      font-family: inherit;
+      border: 0;
+      background: transparent;
+      color: #ac3741;
       cursor: pointer;
-      transition: transform .05s ease, background-color .2s ease;
+      transition: background-color .2s ease, color .2s ease, transform .05s ease;
     }
-    .control-button:hover { background-color: #ff0000; }
-    .control-button:active { transform: scale(0.98); }
-    .control-button:disabled {
-      opacity: 0.6;
-      cursor: not-allowed;
-      transform: none;
+    .toggle-btn:focus-visible { outline: 3px solid #ac3741; outline-offset: 3px; }
+    .toggle-btn.is-active {
+      background: #ac3741;
+      color: #ffebed;
     }
-    .control-button:focus-visible {
-      outline: 3px solid #ac3741;
-      outline-offset: 3px;
-    }
-    .logo {
-    position: absolute;    /* fixé en haut à gauche */
-    top: 10px;
-    left: 10px;
-    height: 5vh;          /* hauteur proportionnelle à l’écran */
-    width: auto;           /* garde les proportions */
-    z-index: 1000;         /* reste au-dessus du reste */
+    .toggle-btn:disabled { opacity: .6; cursor: not-allowed; }
+
+    .status {
+      font-size: 1.3vh;
+      color: #6b2730;
+      min-height: 1.3em;
     }
 
-    .logo-link {
-  position: absolute;
-  top: 10px;
-  left: 10px;
-  z-index: 1000;
-}
-
-.logo2 {
-    position: absolute;    /* fixé en haut à gauche */
-    top: 10px;
-    right: 10px;
-    height: 5vh;          /* hauteur proportionnelle à l’écran */
-    width: auto;           /* garde les proportions */
-    z-index: 1000;         /* reste au-dessus du reste */
-    }
-
-    .logo-link2 {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  z-index: 1000;
-}
-
+    .logo { position: absolute; top: 10px; left: 10px; height: 5vh; width: auto; z-index: 1000; }
+    .logo-link { position: absolute; top: 10px; left: 10px; z-index: 1000; }
+    .logo2 { position: absolute; top: 10px; right: 10px; height: 5vh; width: auto; z-index: 1000; }
+    .logo-link2 { position: absolute; top: 10px; right: 10px; z-index: 1000; }
   </style>
 </head>
 <body>
-
-    <a href="https://associationeden.fr" target="_blank" rel="noopener noreferrer" class="logo-link">
+  <a href="https://associationeden.fr" target="_blank" rel="noopener noreferrer" class="logo-link">
     <img src="https://alexandre42000456.github.io/testEDEN/logo.png" alt="Logo" class="logo">
-    </a>
-
-    <a href="https://associationeden.fr" target="_blank" rel="noopener noreferrer" class="logo-link2">
+  </a>
+  <a href="https://associationeden.fr" target="_blank" rel="noopener noreferrer" class="logo-link2">
     <img src="https://alexandre42000456.github.io/testEDEN/logo.png" alt="Logo" class="logo2">
-    </a>
+  </a>
 
   <div class="page">
     <h1>Plan de la Faculté</h1>
 
-    <!-- Le modèle remplit l'espace disponible entre le titre et le bouton -->
     <model-viewer
       id="building-model"
       src="https://alexandre42000456.github.io/testEDEN/bat10.glb"
@@ -151,71 +94,94 @@
       max-camera-orbit="auto 90deg auto"
       camera-orbit="0deg 75deg 85%"
       style="background-color: #ffebedc5;"
-      >
-    </model-viewer>
+    ></model-viewer>
 
-    <button id="toggle-model-button" class="control-button">Afficher les amphithéâtres</button>
+    <!-- TOGGLE à deux options -->
+    <div class="toggle" role="group" aria-label="Choisir la couche à afficher">
+      <button id="btn-batiments" class="toggle-btn is-active" data-model="batiments" aria-pressed="true">
+        Bâtiments
+      </button>
+      <button id="btn-amphis" class="toggle-btn" data-model="amphis" aria-pressed="false">
+        Amphithéâtres
+      </button>
+    </div>
+    <div id="status" class="status" aria-live="polite"></div>
   </div>
 
   <script>
-    // 🔗 Renseigne tes deux modèles ici
+    // URLs des modèles
     const MODELS = {
       batiments: 'https://alexandre42000456.github.io/testEDEN/bat10.glb',
-      amphis:    'https://alexandre42000456.github.io/testEDEN/amphis6.glb'
+      amphis:    'https://alexandre42000456.github.io/testEDEN/amphis7.glb'
     };
 
     const modelViewer = document.getElementById('building-model');
-    const button = document.getElementById('toggle-model-button');
+    const btnBat = document.getElementById('btn-batiments');
+    const btnAm = document.getElementById('btn-amphis');
+    const status = document.getElementById('status');
 
     let showing = 'batiments';
     let busy = false;
 
-    function updateButtonLabel() {
-      button.textContent = (showing === 'batiments')
-        ? 'Afficher les amphithéâtres'
-        : 'Afficher les bâtiments';
+    function setActive(which) {
+      const isBat = which === 'batiments';
+      btnBat.classList.toggle('is-active', isBat);
+      btnAm.classList.toggle('is-active', !isBat);
+      btnBat.setAttribute('aria-pressed', String(isBat));
+      btnAm.setAttribute('aria-pressed', String(!isBat));
     }
 
-    async function toggleModel() {
-      if (busy) return;
-      busy = true;
-      button.disabled = true;
-      const previous = showing;
-      const next = (showing === 'batiments') ? 'amphis' : 'batiments';
+    async function loadModel(which) {
+      if (busy || which === showing) return;
+      if (!MODELS[which]) return;
 
-      const oldLabel = button.textContent;
-      button.textContent = 'Chargement…';
+      busy = true;
+      btnBat.disabled = true;
+      btnAm.disabled = true;
+      status.textContent = 'Chargement…';
+
+      const prev = showing;
 
       const onLoad = () => {
         modelViewer.removeEventListener('load', onLoad);
         modelViewer.removeEventListener('error', onError);
-        showing = next;
+        showing = which;
+        setActive(showing);
         busy = false;
-        button.disabled = false;
-        updateButtonLabel();
+        btnBat.disabled = false;
+        btnAm.disabled = false;
+        status.textContent = (showing === 'batiments') ? 'Affichage : Bâtiments' : 'Affichage : Amphithéâtres';
       };
 
       const onError = (e) => {
         console.error('Erreur de chargement du modèle', e);
         modelViewer.removeEventListener('load', onLoad);
         modelViewer.removeEventListener('error', onError);
-        modelViewer.src = MODELS[previous];
+        modelViewer.src = MODELS[prev];
+        setActive(prev);
         busy = false;
-        button.disabled = false;
-        button.textContent = oldLabel;
+        btnBat.disabled = false;
+        btnAm.disabled = false;
+        status.textContent = 'Impossible de charger le modèle.';
         alert('Impossible de charger le modèle demandé.');
       };
 
       modelViewer.addEventListener('load', onLoad, { once: true });
       modelViewer.addEventListener('error', onError, { once: true });
 
-      modelViewer.src = MODELS[next];
+      // Déclenche le chargement
+      setActive(which);
+      modelViewer.src = MODELS[which];
       await modelViewer.updateComplete;
     }
 
-    button.addEventListener('click', toggleModel);
-    updateButtonLabel();
-  </script>
+    // Click + clavier (Entrée/Espace) par défaut sur <button>
+    btnBat.addEventListener('click', () => loadModel('batiments'));
+    btnAm.addEventListener('click', () => loadModel('amphis'));
 
+    // Init
+    setActive(showing);
+    status.textContent = 'Affichage : Bâtiments';
+  </script>
 </body>
 </html>
